@@ -8,27 +8,50 @@
     let height = canvas.height = 600;
     let ballX = 400;
     let ballY = 300;
-    let ballSpeedX = 15;
+    let ballSpeedX = -15;
     let ballSpeedY = 3;
     const FPS = 1000 / 30;
     let paddleWidth = 20;
     let paddleHeight = 100;
-    let paddleY = 300;
+    let paddle1Y = 300;
+    let paddle1X = 10;
+    let paddle2X = width - 10;
+    let paddle2Y = height/2;
 
-
+    function ballReset() {
+	ballSpeedX = -ballSpeedX;
+	ballX = canvas.width/2;
+	ballY = canvas.height/2;
+}
 
     function moveBall() {
 
-        if (ballX > width || ballX < 0) {
-            ballSpeedX *= -1;
-        }
 
-        if (ballY > height || ballY < 0) {
-            ballSpeedY *= -1;
-        }
-
-        ballY += ballSpeedY;
-        ballX += ballSpeedX;
+        ballX = ballX + ballSpeedX;
+	ballY = ballY + ballSpeedY;
+	
+	if(ballX < 0) {
+		if(ballY > paddle1Y &&
+			ballY < paddle1Y+paddleHeight) {
+			ballSpeedX = -ballSpeedX;
+		} else {
+			ballReset();	
+		}
+	}
+	if(ballX > canvas.width) {
+		if(ballY > paddle2Y &&
+			ballY < paddle2Y+paddleHeight) {
+			ballSpeedX = -ballSpeedX;
+		} else {
+			ballReset();	
+		}
+	}
+	if(ballY < 0) {
+		ballSpeedY = -ballSpeedY;
+	}
+	if(ballY > canvas.height) {
+		ballSpeedY = -ballSpeedY;
+	}
     }
 
     function drawRect(startX, startY, width, height, color) {
@@ -69,7 +92,7 @@
 
         canvas.addEventListener('mousemove', function(event){
             let mousePosition = calculateMousePosition(event);
-            paddleY = mousePosition.y;
+            paddleY = mousePosition.y - paddleHeight/2;
         })
 
 
